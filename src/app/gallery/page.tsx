@@ -120,7 +120,7 @@ const global = globalData.globalSetting;
                                                         {item.description}
                                                     </p>
 
-                                                    <a href={`${process.env.NEXT_PUBLIC_API_URL}${item.image.url}`}>
+                                                    <a href={`${item.image.url}`}>
                                                         View more
                                                     </a>
 

@@ -154,7 +154,7 @@ export default function ContactPage() {
                         className="mb-0 tm-img-overlay-wrap"
                         style={{
                             backgroundImage: `url(
-      ${process.env.NEXT_PUBLIC_API_URL}${contact.overlayImage.url}
+      ${contact.overlayImage.url}
     )`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',

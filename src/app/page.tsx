@@ -79,7 +79,7 @@ const global = globalData.globalSetting;
           <figure className="mb-0">
 
             <img
-              src={`${process.env.NEXT_PUBLIC_API_URL}${home.heroImage.url}`}
+              src={`${home.heroImage.url}`}
               alt="Image"
               className="img-fluid tm-img"
             />
