@@ -1,66 +1,111 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
 
-export default function Home() {
+export default function HomePage() {
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="tm-page-container mx-auto">
+
+      <header className="tm-header text-center">
+
+        <h1 className="tm-title text-uppercase">
+          Verticard
+        </h1>
+
+        <p className="tm-primary-color">
+          <i>new bootstrap theme</i>
+        </p>
+
+      </header>
+
+      <section className="tm-section">
+
+        <nav className="tm-nav">
+
+          <ul>
+
+            <li className="active">
+
+              <Link href="/">
+                <span className="tm-nav-deco"></span>
+                Intro
+              </Link>
+
+            </li>
+
+            <li>
+
+              <Link href="/gallery">
+                <span className="tm-nav-deco"></span>
+                Gallery
+              </Link>
+
+            </li>
+
+            <li>
+
+              <Link href="/contact">
+                <span className="tm-nav-deco"></span>
+                Contact
+              </Link>
+
+            </li>
+
+          </ul>
+
+        </nav>
+
+        <div className="tm-content-container">
+
+          <figure className="mb-0">
+
+            <img
+              src="/img/img-1.jpg"
+              alt="Image"
+              className="img-fluid tm-img"
             />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+          </figure>
+
+          <div className="tm-content">
+
+            <h2 className="tm-page-title">
+              Verticard Simple CSS Template
+            </h2>
+
+            <p className="mb-4">
+              Curabitur ac est dapibus, ultricies diam non,
+              vestibulum odio. Sed ac nunc lacinia,
+              maximus nisi non, efficitur lacus,
+              Donec efficitur at dui non molestie.
+            </p>
+
+            <p>
+              Verticard is provided by TemplateMo site
+              for 100% free download. You can use it
+              absolutely free for any website.
+              Template re-distribution is NOT allowed
+              on any kind of download website.
+              Thank you.
+            </p>
+
+          </div>
+
         </div>
-      </main>
+
+      </section>
+
+      <footer>
+
+        <span>
+          Copyright 2019 Simple Profile
+        </span>
+
+        <span>
+          designed by TemplateMo
+        </span>
+
+      </footer>
+
     </div>
   );
 }
