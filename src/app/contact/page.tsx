@@ -2,180 +2,277 @@
 
 import Link from 'next/link';
 
+import { useEffect, useState } from 'react';
+
+import { client } from '@/services/graphql';
+
+import { GET_CONTACT_PAGE, GET_GLOBAL_DATA } from '@/services/queries';
+
 export default function ContactPage() {
+    const [contact, setContact] = useState<any>(null);
+    const [global, setGlobal] = useState<any>(null);
 
-  function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
-    e.preventDefault();
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: '',
+    });
 
-    alert('Form Submitted');
-  }
+    useEffect(() => {
 
-  return (
-    <div className="tm-page-container mx-auto">
+        async function loadData() {
 
-      <header className="tm-header text-center">
+            const data: any =
+                await client.request(GET_CONTACT_PAGE);
 
-        <h1 className="tm-title text-uppercase">
-          Verticard
-        </h1>
+            setContact(data.contactPage);
 
-        <p className="tm-primary-color">
-          <i>new bootstrap theme</i>
-        </p>
+            const globalData: any = await client.request(GET_GLOBAL_DATA);
+            setGlobal(globalData.globalSetting);
+        }
 
-      </header>
+        loadData();
 
-      <section className="tm-section">
+    }, []);
 
-        <nav className="tm-nav">
+    async function handleSubmit(
+        e: React.FormEvent<HTMLFormElement>
+    ) {
 
-          <ul>
+        e.preventDefault();
 
-            <li>
+        try {
 
-              <Link href="/">
-                <span className="tm-nav-deco"></span>
-                Intro
-              </Link>
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/contact-submissions`,
+                {
+                    method: 'POST',
 
-            </li>
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
 
-            <li>
+                    body: JSON.stringify({
+                        data: formData,
+                    }),
+                }
+            );
 
-              <Link href="/gallery">
-                <span className="tm-nav-deco"></span>
-                Gallery
-              </Link>
+            // API ERROR
 
-            </li>
+            if (!response.ok) {
 
-            <li className="active">
+                const errorData = await response.json();
 
-              <Link href="/contact">
-                <span className="tm-nav-deco"></span>
-                Contact
-              </Link>
+                console.log(errorData);
 
-            </li>
+                alert(
+                    errorData?.error?.message ||
+                    'Failed to submit form'
+                );
 
-          </ul>
+                return;
+            }
 
-        </nav>
+            // SUCCESS
+            alert('Form submitted successfully');
 
-        <div className="tm-content-container">
+            setFormData({
+                name: '',
+                email: '',
+                message: '',
+            });
 
-          {/* IMAGE OVERLAY SECTION */}
+        } catch (error) {
 
-          <div className="mb-0 tm-img-overlay-wrap">
+            console.log(error);
 
-            <div className="tm-img-overlay"></div>
+            alert('Something went wrong. Please try again.');
+        }
+    }
 
-            <div className="tm-img-overlay-text text-white p-5">
+    if (!contact || !global) {
+        return <div>Loading...</div>;
+    }
+    return (
+        <div className="tm-page-container mx-auto">
 
-              <h4 className="mb-4">
-                Contact Text on Image
-              </h4>
+            <header className="tm-header text-center">
 
-              <p className="tm-small">
+                <h1 className="tm-title text-uppercase">
+                    {global.siteTitle}
+                </h1>
 
-                Text on image has a CSS semi-transparent
-                BG layer on image.
+                <p className="tm-primary-color">
+                    <i>{global.siteSubtitle}</i>
+                </p>
 
-                Praesent ut metus nibh.
-                Vivamus diam purus,
-                finibus et porttitor quis,
-                tristique ac velit.
+            </header>
 
-                Etiam sed nunc eget lacus sagittis
-                hendrerit at ullamcorper nulla.
+            <section className="tm-section">
 
-              </p>
+                <nav className="tm-nav">
 
-            </div>
+                    <ul>
 
-          </div>
+                        <li>
 
-          {/* CONTACT FORM */}
+                            <Link href="/">
+                                <span className="tm-nav-deco"></span>
+                                Intro
+                            </Link>
 
-          <div className="tm-content">
+                        </li>
 
-            <form
-              onSubmit={handleSubmit}
-              className="tm-contact-form"
-            >
+                        <li>
 
-              <div className="form-group">
+                            <Link href="/gallery">
+                                <span className="tm-nav-deco"></span>
+                                Gallery
+                            </Link>
 
-                <input
-                  type="text"
-                  id="contact_name"
-                  name="contact_name"
-                  className="form-control rounded-0 border-top-0 border-right-0 border-left-0"
-                  placeholder="Name"
-                  required
-                />
+                        </li>
 
-              </div>
+                        <li className="active">
 
-              <div className="form-group">
+                            <Link href="/contact">
+                                <span className="tm-nav-deco"></span>
+                                Contact
+                            </Link>
 
-                <input
-                  type="email"
-                  id="contact_email"
-                  name="contact_email"
-                  className="form-control rounded-0 border-top-0 border-right-0 border-left-0"
-                  placeholder="Email"
-                  required
-                />
+                        </li>
 
-              </div>
+                    </ul>
 
-              <div className="form-group">
+                </nav>
 
-                <textarea
-                  rows={6}
-                  id="contact_message"
-                  name="contact_message"
-                  className="form-control rounded-0 border-top-0 border-right-0 border-left-0"
-                  placeholder="Message..."
-                  required
-                ></textarea>
+                <div className="tm-content-container">
 
-              </div>
+                    {/* IMAGE OVERLAY SECTION */}
 
-              <div className="form-group text-right">
+                    <div
+                        className="mb-0 tm-img-overlay-wrap"
+                        style={{
+                            backgroundImage: `url(
+      ${process.env.NEXT_PUBLIC_API_URL}${contact.overlayImage.url}
+    )`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                        }}
+                    >
 
-                <button
-                  type="submit"
-                  className="btn btn-primary rounded-0"
-                >
-                  Submit
-                </button>
+                        <div className="tm-img-overlay"></div>
 
-              </div>
+                        <div className="tm-img-overlay-text text-white p-5">
 
-            </form>
+                            <h4 className="mb-4">
+                                {contact.title}
+                            </h4>
 
-          </div>
+                            <p className="tm-small">
+
+                                {contact.description}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {/* CONTACT FORM */}
+
+                    <div className="tm-content">
+
+                        <form
+                            onSubmit={handleSubmit}
+                            className="tm-contact-form"
+                        >
+
+                            <div className="form-group">
+
+                                <input
+                                    type="text"
+                                    placeholder="Name"
+                                    required
+                                    value={formData.name}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            name: e.target.value,
+                                        })
+                                    }
+                                    className="form-control rounded-0 border-top-0 border-right-0 border-left-0"
+                                />
+
+                            </div>
+
+                            <div className="form-group">
+
+                                <input
+                                    type="email"
+                                    placeholder="Email"
+                                    required
+                                    value={formData.email}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            email: e.target.value,
+                                        })
+                                    }
+                                    className="form-control rounded-0 border-top-0 border-right-0 border-left-0"
+                                />
+
+                            </div>
+
+                            <div className="form-group">
+
+                                <textarea
+                                    rows={6}
+                                    placeholder="Message..."
+                                    required
+                                    value={formData.message}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            message: e.target.value,
+                                        })
+                                    }
+                                    className="form-control rounded-0 border-top-0 border-right-0 border-left-0"
+                                ></textarea>
+
+                            </div>
+
+                            <div className="form-group text-right">
+
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary rounded-0"
+                                >
+                                    Submit
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <footer>
+
+                <span>
+                    Copyright 2019 Simple Profile
+                </span>
+
+                <span>
+                    `designed by {global.footerAuthor}`
+                </span>
+
+            </footer>
 
         </div>
-
-      </section>
-
-      <footer>
-
-        <span>
-          Copyright 2019 Simple Profile
-        </span>
-
-        <span>
-          designed by TemplateMo
-        </span>
-
-      </footer>
-
-    </div>
-  );
+    );
 }

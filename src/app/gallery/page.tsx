@@ -1,290 +1,160 @@
 import Link from 'next/link';
 
-export default function GalleryPage() {
+import { client } from '@/services/graphql';
 
-  return (
-    <div className="tm-page-container mx-auto">
+import { GET_GALLERY_PAGE, GET_GLOBAL_DATA } from '@/services/queries';
 
-      <header className="tm-header text-center">
+async function getData() {
+    return client.request(GET_GALLERY_PAGE);
+}
 
-        <h1 className="tm-title text-uppercase">
-          Verticard
-        </h1>
+async function getGlobalData() {
+    return client.request(GET_GLOBAL_DATA);
+}
 
-        <p className="tm-primary-color">
-          <i>new bootstrap theme</i>
-        </p>
+export default async function GalleryPage() {
+    const data: any = await getData();
 
-      </header>
+    const gallery = data.galleryPage;
 
-      <div className="tm-section">
+    const globalData: any =
+    await getGlobalData();
 
-        <nav className="tm-nav">
+const global = globalData.globalSetting;
+    return (
+        <div className="tm-page-container mx-auto">
 
-          <ul>
+            <header className="tm-header text-center">
 
-            <li>
+                <h1 className="tm-title text-uppercase">
+                    {global.siteTitle}
+                </h1>
 
-              <Link href="/">
-                <span className="tm-nav-deco"></span>
-                Intro
-              </Link>
+                <p className="tm-primary-color">
+                    <i>{global.siteSubtitle}</i>
+                </p>
 
-            </li>
+            </header>
 
-            <li className="active">
+            <div className="tm-section">
 
-              <Link href="/gallery">
-                <span className="tm-nav-deco"></span>
-                Gallery
-              </Link>
+                <nav className="tm-nav">
 
-            </li>
+                    <ul>
 
-            <li>
+                        <li>
 
-              <Link href="/contact">
-                <span className="tm-nav-deco"></span>
-                Contact
-              </Link>
+                            <Link href="/">
+                                <span className="tm-nav-deco"></span>
+                                Intro
+                            </Link>
 
-            </li>
+                        </li>
 
-          </ul>
+                        <li className="active">
 
-        </nav>
+                            <Link href="/gallery">
+                                <span className="tm-nav-deco"></span>
+                                Gallery
+                            </Link>
 
-        <div className="tm-content-container">
+                        </li>
 
-          <div className="tm-content tm-content-2">
+                        <li>
 
-            <p>
-              This gallery contains a beautiful hover
-              effect and pop-up larger images.
-              Please mention TemplateMo site to your friends.
-            </p>
+                            <Link href="/contact">
+                                <span className="tm-nav-deco"></span>
+                                Contact
+                            </Link>
 
-            <div className="container-fluid">
+                        </li>
 
-              <div
-                className="row tm-gallery"
-                id="tmGallery"
-              >
+                    </ul>
 
-                {/* ITEM 1 */}
+                </nav>
 
-                <div className="col-sm-6 tm-gallery-item">
+                <div className="tm-content-container">
 
-                  <figure className="effect-bubba">
+                    <div className="tm-content tm-content-2">
 
-                    <img
-                      src="/img/gallery/gallery-img-01.jpg"
-                      alt="Gallery item"
-                      className="img-fluid"
-                    />
+                        <h2>
+                            {gallery.title}
+                        </h2>
 
-                    <figcaption>
+                        <p>
+                            {gallery.description}
+                        </p>
 
-                      <h2>
-                        Fresh <span>Bubba</span>
-                      </h2>
+                        <div className="container-fluid">
 
-                      <p>
-                        Bubba likes to appear out of thin air.
-                      </p>
+                            <div
+                                className="row tm-gallery"
+                                id="tmGallery"
+                            >
 
-                      <a href="/img/gallery/gallery-img-01.jpg">
-                        View more
-                      </a>
+                                {/* ITEM 1 */}
 
-                    </figcaption>
+                                {gallery.galleryItems.map(
+                                    (
+                                        item: any,
+                                        index: number
+                                    ) => (
 
-                  </figure>
+                                        <div className="col-sm-6 tm-gallery-item" key={index}>
 
-                </div>
+                                            <figure className="effect-bubba">
 
-                {/* ITEM 2 */}
+                                                <img
+                                                    src="/img/gallery/gallery-img-01.jpg"
+                                                    alt="Gallery item"
+                                                    className="img-fluid"
+                                                />
 
-                <div className="col-sm-6 tm-gallery-item">
+                                                <figcaption>
 
-                  <figure className="effect-bubba">
+                                                    <h2>
+                                                        {item.title}
+                                                    </h2>
 
-                    <img
-                      src="/img/gallery/gallery-img-02.jpg"
-                      alt="Gallery item"
-                      className="img-fluid"
-                    />
+                                                    <p>
+                                                        {item.description}
+                                                    </p>
 
-                    <figcaption>
+                                                    <a href={`${process.env.NEXT_PUBLIC_API_URL}${item.image.url}`}>
+                                                        View more
+                                                    </a>
 
-                      <h2>
-                        Fresh <span>Bubba</span>
-                      </h2>
+                                                </figcaption>
 
-                      <p>
-                        Bubba likes to appear out of thin air.
-                      </p>
+                                            </figure>
 
-                      <a href="/img/gallery/gallery-img-02.jpg">
-                        View more
-                      </a>
+                                        </div>
 
-                    </figcaption>
+                                    )
+                                )}
 
-                  </figure>
+                            </div>
 
-                </div>
+                        </div>
 
-                {/* ITEM 3 */}
-
-                <div className="col-sm-6 tm-gallery-item">
-
-                  <figure className="effect-bubba">
-
-                    <img
-                      src="/img/gallery/gallery-img-03.jpg"
-                      alt="Gallery item"
-                      className="img-fluid"
-                    />
-
-                    <figcaption>
-
-                      <h2>
-                        Fresh <span>Bubba</span>
-                      </h2>
-
-                      <p>
-                        Bubba likes to appear out of thin air.
-                      </p>
-
-                      <a href="/img/gallery/gallery-img-03.jpg">
-                        View more
-                      </a>
-
-                    </figcaption>
-
-                  </figure>
+                    </div>
 
                 </div>
-
-                {/* ITEM 4 */}
-
-                <div className="col-sm-6 tm-gallery-item">
-
-                  <figure className="effect-bubba">
-
-                    <img
-                      src="/img/gallery/gallery-img-04.jpg"
-                      alt="Gallery item"
-                      className="img-fluid"
-                    />
-
-                    <figcaption>
-
-                      <h2>
-                        Fresh <span>Bubba</span>
-                      </h2>
-
-                      <p>
-                        Bubba likes to appear out of thin air.
-                      </p>
-
-                      <a href="/img/gallery/gallery-img-04.jpg">
-                        View more
-                      </a>
-
-                    </figcaption>
-
-                  </figure>
-
-                </div>
-
-                {/* ITEM 5 */}
-
-                <div className="col-sm-6 tm-gallery-item">
-
-                  <figure className="effect-bubba">
-
-                    <img
-                      src="/img/gallery/gallery-img-05.jpg"
-                      alt="Gallery item"
-                      className="img-fluid"
-                    />
-
-                    <figcaption>
-
-                      <h2>
-                        Fresh <span>Bubba</span>
-                      </h2>
-
-                      <p>
-                        Bubba likes to appear out of thin air.
-                      </p>
-
-                      <a href="/img/gallery/gallery-img-05.jpg">
-                        View more
-                      </a>
-
-                    </figcaption>
-
-                  </figure>
-
-                </div>
-
-                {/* ITEM 6 */}
-
-                <div className="col-sm-6 tm-gallery-item">
-
-                  <figure className="effect-bubba">
-
-                    <img
-                      src="/img/gallery/gallery-img-06.jpg"
-                      alt="Gallery item"
-                      className="img-fluid"
-                    />
-
-                    <figcaption>
-
-                      <h2>
-                        Fresh <span>Bubba</span>
-                      </h2>
-
-                      <p>
-                        Bubba likes to appear out of thin air.
-                      </p>
-
-                      <a href="/img/gallery/gallery-img-06.jpg">
-                        View more
-                      </a>
-
-                    </figcaption>
-
-                  </figure>
-
-                </div>
-
-              </div>
 
             </div>
 
-          </div>
+            <footer>
+
+                <span>
+                    Copyright 2019 Simple Profile
+                </span>
+
+                <span>
+                    `designed by {global.footerAuthor}`
+                </span>
+
+            </footer>
 
         </div>
-
-      </div>
-
-      <footer>
-
-        <span>
-          Copyright 2019 Simple Profile
-        </span>
-
-        <span>
-          designed by TemplateMo
-        </span>
-
-      </footer>
-
-    </div>
-  );
+    );
 }

@@ -1,6 +1,26 @@
 import Link from 'next/link';
 
-export default function HomePage() {
+import { client } from '@/services/graphql';
+
+import { GET_HOMEPAGE, GET_GLOBAL_DATA } from '@/services/queries';
+
+async function getData() {
+  return client.request(GET_HOMEPAGE);
+}
+
+async function getGlobalData() {
+  return client.request(GET_GLOBAL_DATA);
+}
+
+export default async function HomePage() {
+  const data: any = await getData();
+
+  const home = data.homepage;
+
+  const globalData: any =
+  await getGlobalData();
+
+const global = globalData.globalSetting;
 
   return (
     <div className="tm-page-container mx-auto">
@@ -8,11 +28,11 @@ export default function HomePage() {
       <header className="tm-header text-center">
 
         <h1 className="tm-title text-uppercase">
-          Verticard
+          {global.siteTitle}
         </h1>
 
         <p className="tm-primary-color">
-          <i>new bootstrap theme</i>
+          <i>{global.siteSubtitle}</i>
         </p>
 
       </header>
@@ -59,7 +79,7 @@ export default function HomePage() {
           <figure className="mb-0">
 
             <img
-              src="/img/img-1.jpg"
+              src={`${process.env.NEXT_PUBLIC_API_URL}${home.heroImage.url}`}
               alt="Image"
               className="img-fluid tm-img"
             />
@@ -69,10 +89,10 @@ export default function HomePage() {
           <div className="tm-content">
 
             <h2 className="tm-page-title">
-              Verticard Simple CSS Template
+              {home.contentTitle}
             </h2>
 
-            <p className="mb-4">
+            {/* <p className="mb-4">
               Curabitur ac est dapibus, ultricies diam non,
               vestibulum odio. Sed ac nunc lacinia,
               maximus nisi non, efficitur lacus,
@@ -86,7 +106,28 @@ export default function HomePage() {
               Template re-distribution is NOT allowed
               on any kind of download website.
               Thank you.
-            </p>
+            </p> */}
+
+            {home.sections.map(
+              (section: any, index: number) => {
+
+                if (
+                  section.__typename ===
+                  'ComponentSharedParagraphSection'
+                ) {
+                  return (
+                    <p
+                      key={index}
+                      className="mb-4"
+                    >
+                      {section.content}
+                    </p>
+                  );
+                }
+
+                return null;
+              }
+            )}
 
           </div>
 
@@ -101,7 +142,7 @@ export default function HomePage() {
         </span>
 
         <span>
-          designed by TemplateMo
+          `designed by {global.footerAuthor}``
         </span>
 
       </footer>
