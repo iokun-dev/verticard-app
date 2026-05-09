@@ -1,4 +1,4 @@
-# Next.js Frontend Application
+# Verticard App
 
 ## Overview
 
@@ -13,7 +13,6 @@ The frontend dynamically fetches content from Strapi CMS and renders it across m
 ## Frontend
 - Next.js
 - TypeScript
-- Tailwind CSS
 - GraphQL
 - graphql-request
 
@@ -35,14 +34,26 @@ The frontend dynamically fetches content from Strapi CMS and renders it across m
 - Contact Form Submission
 - GraphQL API Integration
 - CMS-driven content management
-- Reusable Components
 - Responsive Layout
 
 ---
 
-# Project Structure
+# Test Cases Covered
+
+- Homepage loads successfully
+- Gallery page loads successfully
+- Contact page loads successfully
+- Navigation between pages works
+- CMS content renders correctly
+- Images load correctly
+- Contact form submission works
+- GraphQL APIs return data successfully
+
+# Basic Project Structure
 
 ```bash
+public/
+│
 src/
 │
 ├── app/
@@ -53,14 +64,10 @@ src/
 │   │   └── page.tsx
 │   └── layout.tsx
 │
-├── components/
-│   └── Navbar.tsx
-│
 ├── services/
 │   ├── graphql.ts
 │   └── queries.ts
-│
-└── styles/
+
 ```
 
 ---
@@ -79,7 +86,7 @@ src/
 
 Ensure the following are installed:
 
-- Node.js v20 LTS
+- Node.js v24.15.0 LTS
 - npm
 - Strapi backend application
 
@@ -96,7 +103,7 @@ Create a file named:
 Add the following:
 
 ```env
-NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+NEXT_PUBLIC_API_URL=http://localhost:1337
 ```
 
 ---
@@ -114,7 +121,7 @@ git clone <repository-url>
 ## Navigate to Project
 
 ```bash
-cd frontend-app
+cd verticard-app
 ```
 
 ---
@@ -169,63 +176,15 @@ http://localhost:1337/graphql
 
 ---
 
-# GraphQL Client Setup
-
-File:
-
-```bash
-src/services/graphql.ts
-```
-
-Code:
-
-```ts
-import { GraphQLClient } from 'graphql-request';
-
-export const client = new GraphQLClient(
-  `${process.env.NEXT_PUBLIC_STRAPI_URL}/graphql`
-);
-```
-
----
-
-# GraphQL Queries
-
-File:
-
-```bash
-src/services/queries.ts
-```
-
-Contains:
-- Homepage Query
-- Contact Page Query
-- Gallery Page Query
-
----
-
 # Homepage
 
 Homepage content is dynamically managed from Strapi CMS.
 
 ## Homepage Features
 
-- Hero Banner
-- Dynamic Background Image
+- Dynamic Hero Image
 - Dynamic Heading
-- Dynamic Overlay Text
 - Dynamic Paragraph Sections
-
-## Homepage CMS Fields
-
-| Field | Type |
-|---|---|
-| heading | Text |
-| bannerText | Rich Text |
-| bannerImage | Media |
-| sections | Dynamic Zone |
-
----
 
 # Contact Page
 
@@ -233,24 +192,10 @@ Contact page content is dynamically managed from Strapi CMS.
 
 ## Contact Page Features
 
+- Dynamic Header
 - Hero Banner
-- Dynamic Background Image
-- Dynamic Text
 - Contact Information
 - Contact Form
-
-## Contact CMS Fields
-
-| Field | Type |
-|---|---|
-| heading | Text |
-| bannerText | Rich Text |
-| bannerImage | Media |
-| email | Email |
-| phone | Text |
-| address | Rich Text |
-
----
 
 # Contact Form Submission
 
@@ -258,14 +203,6 @@ The contact form submits data to Strapi backend using REST API.
 
 Submitted data is stored inside:
 - Contact Submission collection type
-
-## Submitted Fields
-
-| Field | Type |
-|---|---|
-| name | Text |
-| email | Email |
-| message | Rich Text |
 
 ---
 
@@ -275,21 +212,11 @@ Gallery page content is dynamically managed from Strapi CMS.
 
 ## Gallery Features
 
-- Hero Banner
+- Dynamic Header
+- Dynamic Text
 - Dynamic Gallery Cards
 - Dynamic Images
 - Dynamic Descriptions
-
-## Gallery CMS Fields
-
-| Field | Type |
-|---|---|
-| heading | Text |
-| bannerText | Rich Text |
-| bannerImage | Media |
-| galleryItems | Repeatable Component |
-
----
 
 # Dynamic Zones
 
@@ -302,17 +229,6 @@ This allows:
 
 ---
 
-# Reusable Components
-
-## Navbar
-
-Shared navigation component used across all pages.
-
-Location:
-
-```bash
-src/components/Navbar.tsx
-```
 
 ---
 
@@ -386,54 +302,6 @@ Ensure:
 
 ---
 
-## Images Not Displaying
-
-Update:
-
-```bash
-next.config.ts
-```
-
-Example:
-
-```ts
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '1337',
-      },
-    ],
-  },
-};
-
-export default nextConfig;
-```
-
-Restart frontend server after updating.
-
----
-
-## 403 Forbidden Error
-
-Enable public permissions in Strapi:
-
-```text
-Settings
-→ Users & Permissions
-→ Roles
-→ Public
-```
-
-Enable:
-- find
-- findOne
-- create (for form submission)
-
----
-
 # Future Improvements
 
 - Form validation
@@ -441,7 +309,6 @@ Enable:
 - Loading states
 - SEO optimization
 - Authentication
-- Deployment
 - CMS-driven navigation
 - Dynamic reusable sections
 - Server-side caching
