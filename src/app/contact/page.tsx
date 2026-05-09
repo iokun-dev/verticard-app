@@ -44,7 +44,7 @@ export default function ContactPage() {
         try {
 
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/contact-submissions`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/contact-submissions`,
                 {
                     method: 'POST',
 

@@ -229,9 +229,6 @@ This allows:
 
 ---
 
-
----
-
 # API Architecture
 
 ## Read Operations
